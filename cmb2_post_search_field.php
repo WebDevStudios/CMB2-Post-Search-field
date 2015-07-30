@@ -90,6 +90,7 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			$overlay   : false,
 			$idInput   : false,
 			$checked   : false,
+			$checkedLabel   : false,
 
 			events : {
 				'keypress .find-box-search :input' : 'maybeStartSearch',
@@ -189,21 +190,43 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 				evt.preventDefault();
 
 				this.$checked = $( '#find-posts-response input[type="' + this.selectType + '"]:checked' );
-
+				
 				var checked = this.$checked.map(function() { return this.value; }).get();
-
+				
 				if ( ! checked.length ) {
 					this.close();
 					return;
 				}
-
+				
+				var label = [];
+				$.each(checked, function( index, value ) {
+					label.push($( '#find-posts-response label[for="found-' + value + '"]' ).html());
+				});
+				this.$checkedLabel = label;
 				this.handleSelected( checked );
 			},
 
 			handleSelected: function( checked ) {
 				var existing = this.$idInput.val();
 				existing = existing ? existing + ', ' : '';
-				this.$idInput.val( existing + checked.join( ', ' ) );
+				var newids = checked.join( ', ' );
+				var ids = existing + newids;
+				this.$idInput.val( ids );
+				
+				var labels = this.$checkedLabel;
+				if(newids.indexOf(',')!==-1) {
+					ids = newids.split(',');
+					jQuery.each(ids, function( index, value ) {
+						var cleaned = value.trim().toString();
+						if(jQuery( '.cmb-type-post-search-text ul li[data-id="' + cleaned + '"]' ).length === 0){
+							jQuery( '.cmb-type-post-search-text ul' ).append('<li data-id="' + cleaned + '"><b><?php _e('Title') ?>:</b> ' + labels[index] + '<div title="<?php _e('Remove')?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
+					}
+					});
+				} else {
+					if(jQuery( '.cmb-type-post-search-text ul li[data-id="' + newids + '"]' ).length === 0){
+						jQuery( '.cmb-type-post-search-text ul' ).append('<li data-id="' + newids + '"><b><?php _e('Title') ?>:</b> ' + this.$checkedLabel[0] + '<div title="<?php _e('Remove')?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
+					}
+				}
 
 				this.close();
 			}
@@ -225,7 +248,7 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			search.trigger( 'open' );
 		}
 		
-		$( '.cmb-post-search-remove' ).click( function() {
+		$( '.cmb-post-search-remove' ).on( 'click', function() {
 			var ids = jQuery( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' ).val();
 			var $choosen = $(this);
 			if(ids.indexOf(',')!==-1) {
