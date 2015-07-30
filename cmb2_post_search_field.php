@@ -18,12 +18,14 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 		'autocomplete' => 'off',
 		'style' => 'display:none'
 	) );
-	$list = explode(',',$field->escaped_value);
 	echo '<br><ul style="cursor:move">';
-	foreach ( $list as $value ) {
-		echo '<li data-id="'.trim($value).'"><b>'.__('Title').':</b> '.get_the_title($value);
-		echo '<div title="' . __('Remove') . '" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div>';
-		echo '</li>';
+	if(!empty($field->escaped_value)) {
+		$list = explode(',',$field->escaped_value);
+                foreach ( $list as $value ) {
+                        echo '<li data-id="'.trim($value).'"><b>'.__('Title').':</b> '.get_the_title($value);
+                        echo '<div title="' . __('Remove') . '" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div>';
+                        echo '</li>';
+                }
 	}
 	echo '</ul>';
 }
