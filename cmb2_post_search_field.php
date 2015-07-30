@@ -16,7 +16,7 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 		'data-posttype'   => $field->args( 'post_type' ),
 		'data-selecttype' => 'radio' == $select_type ? 'radio' : 'checkbox',
 		'autocomplete' => 'off',
-		//'style' => 'display:none'
+		'style' => 'display:none'
 	) );
 	$list = explode(',',$field->escaped_value);
 	echo '<br><ul style="cursor:move">';
