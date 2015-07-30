@@ -248,12 +248,13 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			search.trigger( 'open' );
 		}
 		
-		$( '.cmb-post-search-remove' ).on( 'click', function() {
+		$( '.cmb-type-post-search-text' ).on( 'click', '.cmb-post-search-remove', function() {
 			var ids = jQuery( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' ).val();
 			var $choosen = $(this);
 			if(ids.indexOf(',')!==-1) {
 				ids = ids.split(',');
-				jQuery.each(ids, function( index, value ) {
+				var loopids = ids.slice(0);
+				jQuery.each(loopids, function( index, value ) {
 					var cleaned = value.trim().toString();
 					if(String($choosen.parent().data('id')) === cleaned) {
 						$choosen.parent().remove();
