@@ -15,7 +15,17 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 	echo $field_type->input( array(
 		'data-posttype'   => $field->args( 'post_type' ),
 		'data-selecttype' => 'radio' == $select_type ? 'radio' : 'checkbox',
+		'autocomplete' => 'off',
+		'style' => 'display:none'
 	) );
+	$list = explode(',',$field->escaped_value);
+	echo '<br><ul>';
+	foreach ( $list as $value ) {
+		echo '<li data-id="'.trim($value).'"><b>'.__('Title').':</b> '.get_the_title($value);
+		echo '<div title="' . __('Remove') . '" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div>';
+		echo '</li>';
+	}
+	echo '</ul>';
 }
 add_action( 'cmb2_render_post_search_text', 'cmb2_post_search_render_field', 10, 5 );
 
@@ -214,6 +224,25 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 
 			search.trigger( 'open' );
 		}
+		
+		$( '.cmb-post-search-remove' ).click( function() {
+			var ids = jQuery( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' ).val();
+			var $choosen = $(this);
+			if(ids.indexOf(',')!==-1) {
+				ids = ids.split(',');
+				jQuery.each(ids, function( index, value ) {
+					var cleaned = value.trim().toString();
+					if(String($choosen.parent().data('id')) === cleaned) {
+						$choosen.parent().remove();
+						ids.splice(index, 1);
+					}
+				});
+				jQuery( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' ).val(ids.join(','));
+			} else {
+				$choosen.parent().remove();
+				jQuery( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' ).val('');
+			}
+		});
 
 
 	});
