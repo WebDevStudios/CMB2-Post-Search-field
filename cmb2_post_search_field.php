@@ -86,7 +86,6 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			'find' : '<?php echo esc_js( $find ) ?>'
 		};
 
-
 		var SearchView = window.Backbone.View.extend({
 			el         : '#find-posts',
 			overlaySet : false,
@@ -100,14 +99,14 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 				'keyup #find-posts-input'  : 'escClose',
 				'click #find-posts-submit' : 'selectPost',
 				'click #find-posts-search' : 'send',
-				'click #find-posts-close'  : 'close',
+				'click #find-posts-close'  : 'close'
 			},
 
 			initialize: function() {
 				this.$spinner  = this.$el.find( '.find-box-search .spinner' );
 				this.$input    = this.$el.find( '#find-posts-input' );
 				this.$response = this.$el.find( '#find-posts-response' );
-				this.$overlay  = $( '.ui-find-overlay' );
+				this.$overlay  = $( '#find-posts-ui-find-overlay' );
 
 				this.listenTo( this, 'open', this.open );
 				this.listenTo( this, 'close', this.close );
@@ -132,8 +131,8 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 				this.$input.focus();
 
 				if ( ! this.$overlay.length ) {
-					$( 'body' ).append( '<div class="ui-find-overlay"></div>' );
-					this.$overlay  = $( '.ui-find-overlay' );
+					$( 'body' ).append( '<div id="find-posts-ui-find-overlay" class="ui-find-overlay"></div>' );
+					this.$overlay  = $( '#find-posts-ui-find-overlay' );
 				}
 
 				this.$overlay.show();
@@ -145,7 +144,7 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			},
 
 			maybeStartSearch: function( evt ) {
-				if ( 13 == evt.which ) {
+				if ( 13 === evt.which ) {
 					this.send();
 					return false;
 				}
@@ -246,7 +245,7 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 			var search = window.cmb2_post_search;
 			search.$idInput   = $( evt.currentTarget ).parents( '.cmb-type-post-search-text' ).find( '.cmb-td input[type="text"]' );
 			search.postType   = search.$idInput.data( 'posttype' );
-			search.selectType = 'radio' == search.$idInput.data( 'selecttype' ) ? 'radio' : 'checkbox';
+			search.selectType = 'radio' === search.$idInput.data( 'selecttype' ) ? 'radio' : 'checkbox';
 
 			search.trigger( 'open' );
 		}
