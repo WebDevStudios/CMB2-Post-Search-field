@@ -18,7 +18,7 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 		'autocomplete' => 'off',
 		'style' => 'display:none'
 	) );
-	echo '<br><ul style="cursor:move">';
+	echo '<ul style="cursor:move">';
 	if(!empty($field->escaped_value)) {
 		$list = explode(',',$field->escaped_value);
                 foreach ( $list as $value ) {
@@ -238,9 +238,9 @@ function cmb2_post_search_render_js(  $cmb_id, $object_id, $object_type, $cmb ) 
 
 		window.cmb2_post_search = new SearchView();
 
-		$( '.cmb-type-post-search-text .cmb-td input[type="text"]' ).after( '<div title="'+ l10n.find +'" style="color: #999;margin: .3em 0 0 2px; cursor: pointer;" class="dashicons dashicons-search"></div>');
+		$( '.cmb-type-post-search-text .cmb-th label' ).after( '<div title="'+ l10n.find +'" style="position:relative;left:30%;color: #999;cursor: pointer;" class="dashicons dashicons-search"></div>');
 
-		$( '.cmb-type-post-search-text .cmb-td .dashicons-search' ).on( 'click', openSearch );
+		$( '.cmb-type-post-search-text .cmb-th .dashicons-search' ).on( 'click', openSearch );
 
 		function openSearch( evt ) {
 			var search = window.cmb2_post_search;
