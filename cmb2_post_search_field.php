@@ -59,7 +59,7 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 		    'find': '<?php echo esc_js( $find ) ?>'
 		  };
 
-		  var SearchView<?php echo $field->args( 'id' ) ?> = window.Backbone.View.extend({
+		  var SearchView<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?> = window.Backbone.View.extend({
 		    el: '#find-posts',
 		    overlaySet: false,
 		    $overlay: false,
@@ -201,7 +201,7 @@ function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $obj
 
 		  });
 
-		  window.cmb2_post_search<?php echo $field->args( 'id' ) ?> = new SearchView<?php echo $field->args( 'id' ) ?>();
+		  window.cmb2_post_search<?php echo $field->args( 'id' ) ?> = new SearchView<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>();
 
 		  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> .cmb-th label').after('<div title="' + l10n.find + '" style="position:relative;left:30%;color: #999;cursor: pointer;" class="dashicons dashicons-search"></div>');
 
