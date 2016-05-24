@@ -23,7 +23,9 @@ $cmb->add_field( array(
 	// post type also as array
 	'post_type'   => 'post',
 	// or checkbox, used in the modal view to select the post type
-	'select_type' => 'radio'
+	'select_type' => 'radio',
+	// to allow only one post saved, better with radio for select_type
+	'onlyone' => true
 ) );
 ```
 
