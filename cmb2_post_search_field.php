@@ -9,8 +9,6 @@
   License: GPLv2
  */
 
-<?php
-
 function cmb2_post_search_render_field( $field, $escaped_value, $object_id, $object_type, $field_type ) {
   $select_type = $field->args( 'select_type' );
 
