@@ -100,10 +100,10 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 
 				  this.$input.focus();
 
-				  if (!this.$overlay.length) {
+				  if (!jQuery('.ui-find-overlay').length) {
 					$('body').append('<div id="find-posts-ui-find-overlay" class="ui-find-overlay"></div>');
-					this.$overlay = $('#find-posts-ui-find-overlay');
 				  }
+				  this.$overlay = $('#find-posts-ui-find-overlay');
 
 				  this.$overlay.show();
 
@@ -291,13 +291,14 @@ if ( !function_exists( 'cmb2_post_search_set_post_type' ) ) {
 
 }
 
-if ( !function_exists( 'cmb2_post_search_set_post_type' ) ) {
+if ( !function_exists( 'cmb2_post_search_wp_ajax_find_posts' ) ) {
 
 	/**
 	 * Check to see if we have a post type set and, if so, add the
 	 * pre_get_posts action to set the queried post type
 	 */
 	function cmb2_post_search_wp_ajax_find_posts() {
+		
 		if (
 				defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_POST[ 'cmb2_post_search' ], $_POST[ 'action' ], $_POST[ 'post_search_cpt' ] ) && 'find_posts' == $_POST[ 'action' ] && !empty( $_POST[ 'post_search_cpt' ] )
 		) {
