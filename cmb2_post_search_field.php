@@ -131,7 +131,7 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 					  action: 'find_posts',
 					  cmb2_post_search: true,
 					  post_search_cpt: search.postType,
-					  _ajax_nonce: $('#_ajax_nonce').val()
+					  _ajax_nonce: $('.find-box-search:visible input[name="_ajax_nonce"]').val()
 					}
 				  }).always(function () {
 
