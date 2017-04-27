@@ -5,7 +5,7 @@
   Description: Custom field for CMB2 which adds a post-search dialog for searching/attaching other post IDs
   Author: WebDevStudios
   Author URI: http://webdevstudios.com
-  Version: 0.2.1
+  Version: 0.2.0
   License: GPLv2
  */
 if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
@@ -61,6 +61,8 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				'find': '<?php echo esc_js( $find ) ?>'
 			  };
 
+			  var modal_id = '<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>';
+
 			  var SearchView<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?> = window.Backbone.View.extend({
 				el: '#find-posts',
 				overlaySet: false,
@@ -94,6 +96,12 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				  this.$el.hide();
 				},
 				open: function () {
+				  window.bb_modal_id = '<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>';
+				  this.$idInput = $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id).find('.cmb-td input[type="text"]');
+
+				  this.postType = this.$idInput.data('posttype');
+				  this.selectType = 'radio' === this.$idInput.data('selecttype') ? 'radio' : 'checkbox';
+				  
 				  this.$response.html('');
 
 				  this.$el.show();
@@ -180,7 +188,7 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				  var existing = this.$idInput.val();
 				  var search = window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>;
 				  if (search.$idInput.data('onlyone')) {
-					$('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul').empty();
+					$('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul').empty();
 					existing = '';
 				  }
 				  existing = existing ? existing + ', ' : '';
@@ -192,13 +200,13 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 					ids = newids.split(',');
 					$.each(ids, function (index, value) {
 					  var cleaned = value.trim().toString();
-					  if ($('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul li[data-id="' + cleaned + '"]').length === 0) {
-						$('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul').append('<li data-id="' + cleaned + '"><b><?php _e( 'Title' ) ?>:</b> ' + labels[index] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
+					  if ($('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul li[data-id="' + cleaned + '"]').length === 0) {
+						$('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul').append('<li data-id="' + cleaned + '"><b><?php _e( 'Title' ) ?>:</b> ' + labels[index] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
 					  }
 					});
 				  } else {
-					if ($('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul li[data-id="' + newids + '"]').length === 0) {
-					  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul').append('<li data-id="' + newids + '"><b><?php _e( 'Title' ) ?>:</b> ' + this.$checkedLabel[0] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
+					if ($('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul li[data-id="' + newids + '"]').length === 0) {
+					  $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul').append('<li data-id="' + newids + '"><b><?php _e( 'Title' ) ?>:</b> ' + this.$checkedLabel[0] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
 					}
 				  }
 
@@ -209,21 +217,18 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 
 			  window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?> = new SearchView<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>();
 
-			  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> .cmb-th label').after('<div title="' + l10n.find + '" style="position:relative;left:30%;color: #999;cursor: pointer;" class="dashicons dashicons-search"></div>');
+			  $('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' .cmb-th label').after('<div title="' + l10n.find + '" style="position:relative;left:30%;color: #999;cursor: pointer;" class="dashicons dashicons-search"></div>');
 
-			  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> .cmb-th .dashicons-search').on('click', openSearch);
+			  $('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' .cmb-th .dashicons-search').on('click', openSearch);
 
 			  function openSearch(evt) {
 				var search = window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>;
-				search.$idInput = $(evt.currentTarget).parents('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>').find('.cmb-td input[type="text"]');
-				search.postType = search.$idInput.data('posttype');
-				search.selectType = 'radio' === search.$idInput.data('selecttype') ? 'radio' : 'checkbox';
 
 				search.trigger('open');
 			  }
 
-			  $('.cmb-type-post-search-text').on('click', '.cmb-post-search-remove', function () {
-				var ids = $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>').find('.cmb-td input[type="text"]').val();
+			  $('.cmb-type-post-search-text.cmb2-id-' + modal_id).on('click', '.cmb-post-search-remove', function () {
+				var ids = $('.cmb-type-post-search-text.cmb2-id-' + modal_id).find('.cmb-td input[type="text"]').val();
 				var $choosen = $(this);
 				if (ids.indexOf(',') !== -1) {
 				  ids = ids.split(',');
@@ -235,27 +240,27 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 					  ids.splice(index, 1);
 					}
 				  });
-				  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>').find('.cmb-td input[type="text"]').val(ids.join(','));
+				  $('.cmb-type-post-search-text.cmb2-id-' + modal_id).find('.cmb-td input[type="text"]').val(ids.join(','));
 				} else {
 				  $choosen.parent().remove();
-				  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>').find('.cmb-td input[type="text"]').val('');
+				  $('.cmb-type-post-search-text.cmb2-id-' + modal_id).find('.cmb-td input[type="text"]').val('');
 				}
 			  });
 
-			  $(".cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul").sortable({
+			  $('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' ul').sortable({
 				update: function (event, ui) {
 				  var ids = [];
 				  var search = window.cmb2_post_search<?php echo $field->args( 'id' ) ?>;
 				  if (search.$idInput.data('onlyone')) {
-					$('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul li:first').each(function (index, value) {
+					$('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' ul li:first').each(function (index, value) {
 					  ids.push($(this).data('id'));
 					});
 				  } else {
-					$('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?> ul li').each(function (index, value) {
+					$('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' ul li').each(function (index, value) {
 					  ids.push($(this).data('id'));
 					});
 				  }
-				  $('.cmb-type-post-search-text.cmb2-id-<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>').find('.cmb-td input[type="text"]').val(ids.join(', '));
+				  $('.cmb-type-post-search-text.cmb2-id-' + modal_id).find('.cmb-td input[type="text"]').val(ids.join(', '));
 				}
 			  });
 
@@ -298,7 +303,6 @@ if ( !function_exists( 'cmb2_post_search_wp_ajax_find_posts' ) ) {
 	 * pre_get_posts action to set the queried post type
 	 */
 	function cmb2_post_search_wp_ajax_find_posts() {
-		
 		if (
 				defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_POST[ 'cmb2_post_search' ], $_POST[ 'action' ], $_POST[ 'post_search_cpt' ] ) && 'find_posts' == $_POST[ 'action' ] && !empty( $_POST[ 'post_search_cpt' ] )
 		) {
