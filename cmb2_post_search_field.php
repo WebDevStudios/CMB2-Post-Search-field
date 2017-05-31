@@ -69,6 +69,7 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				$overlay: false,
 				$idInput: false,
 				$checked: false,
+				$self: '<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>',
 				$checkedLabel: false,
 				events: {
 				  'keypress .find-box-search :input': 'maybeStartSearch',
@@ -97,11 +98,11 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				},
 				open: function () {
 				  window.bb_modal_id = '<?php echo str_replace( '_', '-', sanitize_html_class( $field->args( 'id' ) ) ) ?>';
-				  this.$idInput = $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id).find('.cmb-td input[type="text"]');
+				  this.$idInput = $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' .cmb-td input[type="text"]');
 
 				  this.postType = this.$idInput.data('posttype');
 				  this.selectType = 'radio' === this.$idInput.data('selecttype') ? 'radio' : 'checkbox';
-				  
+
 				  this.$response.html('');
 
 				  this.$el.show();
@@ -185,6 +186,10 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				  this.handleSelected(checked);
 				},
 				handleSelected: function (checked) {
+                                  this.close();
+                                  if(this.$self !== window.bb_modal_id) {
+                                    return;
+                                  }
 				  var existing = this.$idInput.val();
 				  var search = window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>;
 				  if (search.$idInput.data('onlyone')) {
@@ -209,8 +214,6 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 					  $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul').append('<li data-id="' + newids + '"><b><?php _e( 'Title' ) ?>:</b> ' + this.$checkedLabel[0] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
 					}
 				  }
-
-				  this.close();
 				}
 
 			  });
@@ -292,6 +295,7 @@ if ( !function_exists( 'cmb2_post_search_set_post_type' ) ) {
 	 */
 	function cmb2_post_search_set_post_type( $query ) {
 		$query->set( 'post_type', esc_attr( $_POST[ 'post_search_cpt' ] ) );
+		$query->set( 'post_status', 'publish' );
 	}
 
 }
@@ -306,7 +310,7 @@ if ( !function_exists( 'cmb2_post_search_wp_ajax_find_posts' ) ) {
 		if (
 				defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_POST[ 'cmb2_post_search' ], $_POST[ 'action' ], $_POST[ 'post_search_cpt' ] ) && 'find_posts' == $_POST[ 'action' ] && !empty( $_POST[ 'post_search_cpt' ] )
 		) {
-			add_action( 'pre_get_posts', 'cmb2_post_search_set_post_type' );
+			add_action( 'pre_get_posts', 'cmb2_post_search_set_post_type',9999 );
 		}
 	}
 
