@@ -128,7 +128,9 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				  }
 				},
 				send: function () {
-
+                                  if(this.$self !== window.bb_modal_id) {
+                                    return;
+                                  }
 				  var search = this;
 				  search.$spinner.show();
 
@@ -166,9 +168,11 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				},
 				selectPost: function (evt) {
 				  evt.preventDefault();
+				  if(this.$self !== window.bb_modal_id) {
+                                    return;
+                                  }
 
 				  this.$checked = $('#find-posts-response input[type="' + this.selectType + '"]:checked');
-
 				  var checked = this.$checked.map(function () {
 					return this.value;
 				  }).get();
@@ -186,10 +190,6 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 				  this.handleSelected(checked);
 				},
 				handleSelected: function (checked) {
-                                  this.close();
-                                  if(this.$self !== window.bb_modal_id) {
-                                    return;
-                                  }
 				  var existing = this.$idInput.val();
 				  var search = window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>;
 				  if (search.$idInput.data('onlyone')) {
@@ -214,6 +214,8 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 					  $('.cmb-type-post-search-text.cmb2-id-' + window.bb_modal_id + ' ul').append('<li data-id="' + newids + '"><b><?php _e( 'Title' ) ?>:</b> ' + this.$checkedLabel[0] + '<div title="<?php _e( 'Remove' ) ?>" style="color: #999;margin: -0.1em 0 0 2px; cursor: pointer;" class="cmb-post-search-remove dashicons dashicons-no"></div></li>');
 					}
 				  }
+
+                                  this.close();
 				}
 
 			  });
