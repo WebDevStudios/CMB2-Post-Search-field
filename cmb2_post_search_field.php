@@ -255,7 +255,7 @@ if ( !function_exists( 'cmb2_post_search_render_field' ) ) {
 			  $('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' ul').sortable({
 				update: function (event, ui) {
 				  var ids = [];
-				  var search = window.cmb2_post_search<?php echo $field->args( 'id' ) ?>;
+				  var search = window.cmb2_post_search<?php echo str_replace( '-', '_', $field->args( 'id' ) ) ?>;
 				  if (search.$idInput.data('onlyone')) {
 					$('.cmb-type-post-search-text.cmb2-id-' + modal_id + ' ul li:first').each(function (index, value) {
 					  ids.push($(this).data('id'));
