@@ -1,3 +1,7 @@
+# Abandoned
+
+There is a better alternative: https://github.com/rubengc/cmb2-field-ajax-search
+
 CMB2 Post Search field
 ======================
 
@@ -5,7 +9,7 @@ Custom field for CMB2 which adds a post-search dialog for searching/attaching ot
 
 Adds a new text field type (with a button), `post_search_text` that adds a quick post search dialog for saving post IDs to a text input.
 
-##Example
+## Example
 
 ```php
 // Classic CMB2 declaration
